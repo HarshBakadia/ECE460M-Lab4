@@ -12,49 +12,40 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module buttons(
-    input CLK,
-    input RESET,
-    output up,
-    output down,
-    output left,
-    output right,
-    output SW0,
-    output SW1
+    input up,
+    input down,
+    input left,
+    input right,
+    //input SW0,
+    //input SW1,
+    //output reg[15:0] t_meter,
+    output reg[3:0] l
     );
     
     //internal signals
-    wire up, down, left, right;
-    wire switch0, switch1;
-    wire temp_meter;
-    reg[15:0]  t_meter;
-    reg[1:0] state;
+    //wire up, down, left, right;
+    //wire switch0, switch1;
+    reg state;
+    reg[15:0] t_meter;
+
     
     //Combination logic to add value to the t_meter
     
-    always @(posedge CLK, posedge RESET) begin
+    always @(up, down, left, right /*posedge SW0, posedge SW1,*/) begin
+        
+        l = {t_meter[3:0]};
     
-        if(RESET) begin
-            state <= 0;
-            t_meter <= 0;
-        end
-        
-        else if(!state && (up|down|left|right)) begin
+        if(up && !state)     begin   t_meter <= t_meter + 1;  end
+        if(down && !state)   begin   t_meter <= t_meter - 1;  end
+        if(left && !state)   begin   t_meter <= t_meter * 2;  end
+        if(right && !state)  begin   t_meter <= t_meter / 2;  end
+
+
+        if((up | down | left | right))
             state <= 1;
-            
-            if(up)          t_meter <= t_meter + 1;
-            else if(down)   t_meter <= t_meter - 1;
-            else if(left)   t_meter <= t_meter * 2;
-            else if(right)  t_meter <= t_meter / 2;
-            else            t_meter <= t_meter;
-        end
-        
-        else begin
-            if((up | down | left | right))
-                state <= 1;
-            else
-                state <= 0;
-        end
-    end
+        else
+            state <= 0;
+end
     
     
 endmodule
