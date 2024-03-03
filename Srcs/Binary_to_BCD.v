@@ -37,19 +37,19 @@ end
 
 always @(*)begin
     // Raw Binary to BCD16
+    // Flashing Mask Operation at 0
+    if(In_Bin16 == 0) begin
+        if(Mask_Clk) Out_BCD16 <= 0;
+        else Out_BCD16 <= 'hAAAA;
+    end    
+    // Blank Out Odd Values < 199
+    else if((In_Bin16 < 200) && In_Bin16[0]) Out_BCD16 <= 'hAAAA;
     // Normal Operation 200 - 9999
-    if(In_Bin16 < 9999) begin
+    else if(In_Bin16 < 9999) begin
         Out_BCD16[15:12] <= (In_Bin16/1000);
         Out_BCD16[11:8]  <= ((In_Bin16%1000)/100);
         Out_BCD16[7:4]   <= ((In_Bin16%100)/10);
         Out_BCD16[3:0]   <= (In_Bin16%10);
-    end
-    // Blank Out Odd Values < 199
-    else if((In_Bin16 < 200) && In_Bin16[0]) Out_BCD16 <= 'hAAAA;
-    // Flashing Mask Operation at 0
-    else if(In_Bin16 == 0) begin
-        if(Mask_Clk) Out_BCD16 <= 0;
-        else Out_BCD16 <= 'hAAAA;
     end
     // OVERFLOW ERROR
     else Out_BCD16 <= 'hFFFF;

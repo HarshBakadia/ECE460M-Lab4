@@ -14,20 +14,21 @@
 // Dependencies: 
 // 
 // Revision:
-// Revision 0.01 - File Created
+// Revision 0.02
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
 
 module Counter_Interface(
+    input SYS_CLK,
     input RESET,
     input UP,
     input LEFT,
     input RIGHT,
     input DOWN,
+    input SW0,
     input SW1,
-    input SW2,
     output reg [15:0] Out_Bin16);
     
 // Internal Variables
@@ -35,45 +36,37 @@ wire Decr_Clk;
 reg  Decr_Clk_Enable;
 Divider_1Hz Decr_Clk_Gen(SYS_CLK, Decr_Clk); 
 
-
 // Simulation Init    
 initial begin
     Out_Bin16 = 0;
+    
     Decr_Clk_Enable <= 1;
 end
 
-// Reset Condition
-always@(posedge RESET) Out_Bin16 <= 0;
-
-// Constant Countdown Condition
-always@(posedge Decr_Clk) begin
-    if(Decr_Clk_Enable) begin
-        if(Out_Bin16 > 0) Out_Bin16 <= Out_Bin16 - 1;
-        else Out_Bin16 <= 0;
-    end    
-end
-
-// Time Interval Additions
-always@(posedge UP, posedge LEFT, posedge RIGHT, posedge DOWN) begin
-    if(UP)          Out_Bin16 <= Out_Bin16 + 10;
+// STUPID UGLY SMASH
+always@(posedge RESET, posedge Decr_Clk, posedge UP, posedge LEFT, posedge RIGHT, posedge DOWN,
+    posedge SW0, posedge SW1) begin
+    
+    if(RESET) Out_Bin16 <= 0;
+    else if(UP)     Out_Bin16 <= Out_Bin16 + 10;
     else if(LEFT)   Out_Bin16 <= Out_Bin16 + 180;
     else if(RIGHT)  Out_Bin16 <= Out_Bin16 + 200;
     else if(DOWN)   Out_Bin16 <= Out_Bin16 + 550;
-end
-
-// Time Interval Assignments
-always@(SW1, SW2) begin
-    if(SW1) begin
+    else if(SW0) begin
         Out_Bin16 <= 10;
         Decr_Clk_Enable <= 0;
     end
-    else if(SW2) begin
+    else if(SW1) begin
         Out_Bin16 <= 205;
         Decr_Clk_Enable <= 0;
+    end    else if(Decr_Clk_Enable) begin
+        if(Out_Bin16 > 0) Out_Bin16 <= Out_Bin16 - 1;
+        else Out_Bin16 <= 0;
     end
-    // Re-Enable Decrement Clock
-    else Decr_Clk_Enable <= 1;
 end
-    
-    
+
+// Can't be Combined for Stupid Reason...
+always@(negedge SW0) Decr_Clk_Enable <= 1;
+always@(negedge SW1) Decr_Clk_Enable <= 1;
+
 endmodule
