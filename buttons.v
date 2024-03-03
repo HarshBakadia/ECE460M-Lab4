@@ -12,40 +12,57 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module buttons(
-    input up,
-    input down,
-    input left,
-    input right,
-    //input SW0,
-    //input SW1,
-    //output reg[15:0] t_meter,
+    input CLK, 
+    input RESET,
+    input U,
+    input D,
+    input L,
+    input R,
+    output reg up,
+    output reg down, 
+    output reg left, 
+    output reg right,
     output reg[3:0] l
     );
     
-    //internal signals
-    //wire up, down, left, right;
-    //wire switch0, switch1;
-    reg state;
-    reg[15:0] t_meter;
-
+    reg[1:0] state;
     
-    //Combination logic to add value to the t_meter
-    
-    always @(up, down, left, right /*posedge SW0, posedge SW1,*/) begin
-        
-        l = {t_meter[3:0]};
-    
-        if(up && !state)     begin   t_meter <= t_meter + 1;  end
-        if(down && !state)   begin   t_meter <= t_meter - 1;  end
-        if(left && !state)   begin   t_meter <= t_meter * 2;  end
-        if(right && !state)  begin   t_meter <= t_meter / 2;  end
-
-
-        if((up | down | left | right))
-            state <= 1;
-        else
+    always @(posedge CLK, posedge RESET) begin
+         
+         if(RESET) begin
             state <= 0;
-end
-    
+            l <= 4'h0;
+            /*up <= 0;
+            down <= 0;
+            left <= 0;
+            right <= 0;*/
+         end
+         
+         else begin
+            if(!state && (U|R|L|D)) begin 
+            //waiting for button press state
+                state <= 1;
+                
+                if(U)        begin l[3] <= ~l[3]; up <= 1;  end
+                else if(D)   begin l[2] <= ~l[2]; down <= 1;  end 
+                else if(L)   begin l[1] <= ~l[1]; left <= 1;  end
+                else if(R)   begin l[0] <= ~l[0]; right <= 1;  end
+                           
+            end
+            
+            else begin
+                if(U | D | L | R)   state <= 1;
+                else begin
+                    state <= 0; //Waits for release
+                    
+                    up <= 0;
+                    down <= 0;
+                    left <= 0;
+                    right <= 0;
+                end
+            end
+           
+         end
+    end
     
 endmodule
