@@ -54,8 +54,8 @@ always@(posedge Dspl_Clk, posedge RESET) begin
     else Dspl_Sel <= Dspl_Sel + 1;
 end
 
-// 7-Segment Display Patterns 
 // 4-bit BCD -> Displayed value
+// 7-Segment Display Patterns 
 always@(posedge SYS_CLK)
 begin
     case(Dspl_Sel)

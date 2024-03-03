@@ -25,7 +25,7 @@ module Binary_to_BCD (
     input [15:0] In_Bin16,
     output reg [15:0] Out_BCD16);
 
-//variables
+// Internal Variables
 wire Mask_Clk;
 Divider_1Hz Mask_Clk_Gen(SYS_CLK, Mask_Clk); 
 
@@ -52,7 +52,7 @@ always @(*)begin
         else Out_BCD16 <= 'hAAAA;
     end
     // OVERFLOW ERROR
-    else Out_BCD16 <= 16'hFFFF;
+    else Out_BCD16 <= 'hFFFF;
 end
  
 endmodule
