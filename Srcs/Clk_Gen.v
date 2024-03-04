@@ -59,7 +59,7 @@ module Divider_20Hz(SYS_CLK, slowClk);
 
   always @ (posedge SYS_CLK)
   begin
-    if(counter == 5000000) begin
+    if(counter == 7500000) begin
       counter <= 1;
       slowClk <= ~slowClk;
     end

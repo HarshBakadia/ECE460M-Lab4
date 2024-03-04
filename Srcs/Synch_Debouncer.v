@@ -25,15 +25,15 @@ module Synch_Debouncer(
     output Bttn_D);
     
 // Internal Variables
-wire Q1, Q2;
+wire Q0, Q1, Q2;
 wire Synch_Clk;
 Divider_20Hz Synch_Clk_Gen(SYS_CLK, Synch_Clk);
 
-
-D_FF FF1(Synch_Clk, BTTN, Q1);
+D_FF FF0(Synch_Clk, BTTN, Q0);
+D_FF FF1(Synch_Clk, Q0, Q1);
 D_FF FF2(Synch_Clk, Q1, Q2);
 
-assign Bttn_D = Q1 & ~Q2;
+assign Bttn_D = (Q1 & (!Q2));
     
 endmodule
 
