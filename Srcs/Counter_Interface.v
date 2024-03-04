@@ -23,22 +23,19 @@
 module Counter_Interface(
     input SYS_CLK,
     input RESET,
-    input UP,
-    input LEFT,
-    input RIGHT,
-    input DOWN,
-    input SW0,
-    input SW1,
+    input UP, LEFT, RIGHT, DOWN,
+    input SW0, SW1,
     output reg [15:0] Out_Bin16);
     
 // Internal Variables
 wire Decr_Clk;
 reg  Decr_Clk_Enable;
-Divider_1Hz Decr_Clk_Gen(SYS_CLK, Decr_Clk); 
+Divider_1Hz Decr_Clk_Gen(SYS_CLK, Decr_Clk);
+
 
 // Simulation Init    
 initial begin
-    Out_Bin16 = 0;
+    Out_Bin16 <= 0;
     Decr_Clk_Enable <= 1;
 end
 
@@ -46,9 +43,8 @@ end
 always@(posedge RESET, posedge Decr_Clk, posedge UP, posedge LEFT, posedge RIGHT, posedge DOWN,
     posedge SW0, posedge SW1) begin
     
-    if(RESET) Out_Bin16 <= 0;
-//    else if(UP)     Out_Bin16 <= Out_Bin16 + 10;
-    else if(UP)     Out_Bin16 <= Out_Bin16 + 1;
+    if(RESET)       Out_Bin16 <= 0;
+    else if(UP)     Out_Bin16 <= Out_Bin16 + 10;
     else if(LEFT)   Out_Bin16 <= Out_Bin16 + 180;
     else if(RIGHT)  Out_Bin16 <= Out_Bin16 + 200;
     else if(DOWN)   Out_Bin16 <= Out_Bin16 + 550;
@@ -59,7 +55,9 @@ always@(posedge RESET, posedge Decr_Clk, posedge UP, posedge LEFT, posedge RIGHT
     else if(SW1) begin
         Out_Bin16 <= 205;
         Decr_Clk_Enable <= 0;
-    end    else if(Decr_Clk_Enable) begin
+    end
+    // Triggered by Decr_Clk
+    else if(Decr_Clk_Enable) begin
         if(Out_Bin16 > 0) Out_Bin16 <= Out_Bin16 - 1;
         else Out_Bin16 <= 0;
     end

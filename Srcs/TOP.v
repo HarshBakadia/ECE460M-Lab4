@@ -25,7 +25,7 @@ module TOP(
     input RESET,
     input UP, LEFT, RIGHT, DOWN,
     input SW0, SW1,
-    output [3:0] LED,
+    output [15:0] LED,
     output [3:0] Actv_Sel,
     output [6:0] Dspl_Out);
     
@@ -33,11 +33,13 @@ module TOP(
 wire Up_D, Left_D, Right_D, Down_D; // Debounced Button Pulse
 wire [15:0] Bin16;
 
+//DEBUG Bin16
+assign LED = Bin16;
 // Tie LED to Debounced Button Pulse
-assign LED[3] = Up_D;
-assign LED[2] = Left_D;
-assign LED[1] = Right_D;
-assign LED[0] = Down_D;
+//assign LED[3] = Up_D;
+//assign LED[2] = Left_D;
+//assign LED[1] = Right_D;
+//assign LED[0] = Down_D;
 // Module Instantiations
 Synch_Debouncer S_D_UP(.SYS_CLK(SYS_CLK), .BTTN(UP), .Bttn_D(Up_D));
 Synch_Debouncer S_D_LEFT(.SYS_CLK(SYS_CLK), .BTTN(LEFT), .Bttn_D(Left_D));
