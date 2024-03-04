@@ -42,7 +42,31 @@ module Divider_1Hz(SYS_CLK, slowClk);
       counter <= counter + 1;
     end
   end
+endmodule
 
+
+// 20 Pulse/Sec
+module Divider_20Hz(SYS_CLK, slowClk);
+  input SYS_CLK; //fast clock
+  output reg slowClk; //slow clock
+
+  reg[27:0] counter;
+
+  initial begin
+    counter = 0;
+    slowClk = 0;
+  end
+
+  always @ (posedge SYS_CLK)
+  begin
+    if(counter == 5000000) begin
+      counter <= 1;
+      slowClk <= ~slowClk;
+    end
+    else begin
+      counter <= counter + 1;
+    end
+  end
 endmodule
 
 // 30kHz Pulse/Sec 
@@ -67,6 +91,5 @@ module Divider_30kHz(SYS_CLK, slowClk);
       counter <= counter + 1;
     end
   end
-  
 endmodule
 

@@ -39,7 +39,6 @@ Divider_1Hz Decr_Clk_Gen(SYS_CLK, Decr_Clk);
 // Simulation Init    
 initial begin
     Out_Bin16 = 0;
-    
     Decr_Clk_Enable <= 1;
 end
 
@@ -48,7 +47,8 @@ always@(posedge RESET, posedge Decr_Clk, posedge UP, posedge LEFT, posedge RIGHT
     posedge SW0, posedge SW1) begin
     
     if(RESET) Out_Bin16 <= 0;
-    else if(UP)     Out_Bin16 <= Out_Bin16 + 10;
+//    else if(UP)     Out_Bin16 <= Out_Bin16 + 10;
+    else if(UP)     Out_Bin16 <= Out_Bin16 + 1;
     else if(LEFT)   Out_Bin16 <= Out_Bin16 + 180;
     else if(RIGHT)  Out_Bin16 <= Out_Bin16 + 200;
     else if(DOWN)   Out_Bin16 <= Out_Bin16 + 550;
