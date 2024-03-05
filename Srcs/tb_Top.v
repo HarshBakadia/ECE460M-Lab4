@@ -25,10 +25,12 @@ reg SYS_CLK;
 reg RESET;
 reg UP, LEFT, RIGHT, DOWN;
 reg SW0, SW1;
+wire [3:0] LED;
 wire [3:0] Actv_Sel;
 wire [6:0] Dspl_Out;
 
 // Interconnections
+wire Up_D, Left_D, Right_D, Down_D; // Debounced Button Pulse
 wire [15:0] Bin16;
 
 
@@ -52,11 +54,17 @@ end
 // Simulation Stimulus
 initial begin
     #1000000 UP = 1;
-    #1100000 UP = 0;    
+    #1100000 UP = 0;
+    #1200000 UP = 1;
+    #1300000 UP = 0;
+    #1400000 UP = 1;
+    #1500000 UP = 0;    
 end
 
 // Module Test Bench
-Counter_Interface tb_interface(.RESET(RESET), .UP(UP), .LEFT(LEFT), .RIGHT(RIGHT), .DOWN(DOWN),
+Buttons tb_Debouncer(.SYS_CLK(SYS_CLK), .RESET(RESET), .U(UP), .D(DOWN), .L(LEFT), .R(RIGHT),
+    .up(Up_D), .down(Down_D), .left(Left_D), .right(Right_D), .LED(LED));
+Counter_Interface tb_interface(.SYS_CLK(SYS_CLK), .RESET(RESET), .UP(Up_D), .LEFT(Left_D), .RIGHT(Right_D), .DOWN(Down_D),
     .SW0(SW0), .SW1(SW1), .Out_Bin16(Bin16));
 Meter_Display tb_Meter(.SYS_CLK(SYS_CLK), .RESET(RESET), .Rem_Time(Bin16),
     .Actv_Sel(Actv_Sel), .Dspl_Out(Dspl_Out));
