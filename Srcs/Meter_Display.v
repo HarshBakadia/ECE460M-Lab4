@@ -34,8 +34,7 @@ Divider_30kHz Sel_Clk(SYS_CLK, Dspl_Clk);
 
 // Binary to BCD Converter 
 wire [15:0] BCD16;
-Binary_to_BCD Bin_2_BCD(.SYS_CLK(SYS_CLK), .RESET(RESET),
-    .In_Bin16(Rem_Time), .Out_BCD16(BCD16));
+Binary_to_BCD Bin_2_BCD(.SYS_CLK(SYS_CLK), .In_Bin16(Rem_Time), .Out_BCD16(BCD16));
     
 // Simulation Init Block
 initial begin

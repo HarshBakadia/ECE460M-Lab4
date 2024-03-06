@@ -27,11 +27,13 @@ module Synch_Debouncer(
 // Internal Variables
 wire Q0, Q1, Q2;
 wire Synch_Clk;
-Divider_20Hz Synch_Clk_Gen(SYS_CLK, Synch_Clk);
+Divider_15Hz Synch_Clk_Gen(SYS_CLK, Synch_Clk);
 
+// Synchronize Input Signal
 D_FF FF0(Synch_Clk, BTTN, Q0);
 D_FF FF1(Synch_Clk, Q0, Q1);
-D_FF FF2(Synch_Clk, Q1, Q2);
+// Single Pulse the Output
+D_FF FF2(SYS_CLK, Q1, Q2);
 
 assign Bttn_D = (Q1 & (!Q2));
     

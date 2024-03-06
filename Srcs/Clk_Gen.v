@@ -19,6 +19,30 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
+// 1 Pulse of 100MHz every Sec 
+module Pulser_1Hz(SYS_CLK, Pulse);
+  input SYS_CLK; //fast clock
+  output reg Pulse; //slow clock
+
+  reg[27:0] counter;
+
+  initial begin
+    counter = 0;
+    Pulse = 0;
+  end
+
+  always @ (posedge SYS_CLK)
+  begin
+    if(counter == 100000000) begin
+      counter <= 1;
+      Pulse <= 'b1;
+    end
+    else begin
+      counter <= counter + 1;
+      Pulse <= 'b0;
+    end
+  end
+endmodule
 
 // 1 Pulse/Sec 
 module Divider_1Hz(SYS_CLK, slowClk);
@@ -45,8 +69,8 @@ module Divider_1Hz(SYS_CLK, slowClk);
 endmodule
 
 
-// 20 Pulse/Sec
-module Divider_20Hz(SYS_CLK, slowClk);
+// 15 Pulse/Sec
+module Divider_15Hz(SYS_CLK, slowClk);
   input SYS_CLK; //fast clock
   output reg slowClk; //slow clock
 

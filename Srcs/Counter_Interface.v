@@ -19,9 +19,6 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-//TODO: Try converting inputs into a bit vector and using a case statement
-//  instead of an if/else tree
-
 module Counter_Interface(
     input SYS_CLK,
     input RESET,
@@ -32,7 +29,7 @@ module Counter_Interface(
 // Internal Variables
 wire Decr_Clk;
 reg Decr_Clk_Enable;
-Divider_1Hz Decr_Clk_Gen(SYS_CLK, Decr_Clk);
+Pulser_1Hz Decr_Clk_Gen(SYS_CLK, Decr_Clk);
 
 
 // Simulation Init    
@@ -43,10 +40,7 @@ end
 
 
 
-
-always@(posedge RESET, posedge Up, posedge Left, posedge Right, posedge Down,
-    posedge SW0, posedge SW1, posedge Decr_Clk) begin
-    
+always@(posedge RESET, posedge SYS_CLK) begin
     if(RESET)       Out_Bin16 <= 0;
     else if(Up)     Out_Bin16 <= 10  + Out_Bin16;
     else if(Left)   Out_Bin16 <= 180 + Out_Bin16;
@@ -55,17 +49,16 @@ always@(posedge RESET, posedge Up, posedge Left, posedge Right, posedge Down,
     else if(SW0)    Out_Bin16 <= 10;
     else if(SW1)    Out_Bin16 <= 205;
     // Triggered by Decr_Clk
-    else if(Decr_Clk_Enable) begin
+    else if(Decr_Clk && Decr_Clk_Enable) begin
         if(Out_Bin16 > 0) Out_Bin16 <= Out_Bin16 - 1;
         else Out_Bin16 <= 0;
     end
 end
+
 // Prevent Decrementing While SW Active
 always@(SW0, SW1)begin 
     if(SW0 | SW1) Decr_Clk_Enable <= 0;
     else Decr_Clk_Enable <= 1;
 end
-
-
 
 endmodule

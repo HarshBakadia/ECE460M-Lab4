@@ -21,7 +21,6 @@
 
 module Binary_to_BCD (
     input SYS_CLK,
-    input RESET, 
     input [15:0] In_Bin16,
     output reg [15:0] Out_BCD16);
 
