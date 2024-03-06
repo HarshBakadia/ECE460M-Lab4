@@ -41,7 +41,9 @@ end
 
 
 always@(posedge RESET, posedge SYS_CLK) begin
-    if(RESET)       Out_Bin16 <= 0;
+
+    if(RESET) Out_Bin16 <= 0;
+    else if(Out_Bin16 > 9999) Out_Bin16 <= 9999;
     else if(Up)     Out_Bin16 <= 10  + Out_Bin16;
     else if(Left)   Out_Bin16 <= 180 + Out_Bin16;
     else if(Right)  Out_Bin16 <= 200 + Out_Bin16;
@@ -54,6 +56,7 @@ always@(posedge RESET, posedge SYS_CLK) begin
         else Out_Bin16 <= 0;
     end
 end
+
 
 // Prevent Decrementing While SW Active
 always@(SW0, SW1)begin 

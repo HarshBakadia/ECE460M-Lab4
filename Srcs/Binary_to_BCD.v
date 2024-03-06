@@ -51,7 +51,7 @@ always @(*)begin
         Out_BCD16[3:0]   <= (In_Bin16%10);
     end
     // OVERFLOW ERROR
-    else Out_BCD16 <= 'hFFFF;
+    else Out_BCD16 <= 'h9999;
 end
  
 endmodule
